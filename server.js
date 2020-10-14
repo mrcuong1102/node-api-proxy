@@ -7,14 +7,15 @@ const app = express();
 const port = config.port;
 app.use(cors());
 
-app.use('/', function(req, res) {
+app.use('/', function(req, res, next) {
 
   //Take the baseurl from your api and also supply whatever
   //route you use with that url
-  const apiUrl = req.headers["apiUrl"];
+  const apiUrl = req.headers["api-url"];
   if (!apiUrl) {
-    console.error("Error no apiUrl found.");
     res.statusCode = 400;
+    res.send("Error no apiUrl found.");
+    next();
     return;
   }
   let url =  apiUrl + req.url;
