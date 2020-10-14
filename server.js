@@ -1,4 +1,4 @@
-require('dotenv').config(); 
+require('dotenv').config();
 const config = require('./config/config');
 const express = require('express');
 const request = require('request');
@@ -9,13 +9,19 @@ app.use(cors());
 
 app.use('/', function(req, res) {
 
-  //Take the baseurl from your api and also supply whatever 
+  //Take the baseurl from your api and also supply whatever
   //route you use with that url
-  let url =  config.apiUrl + req.url;
+  const apiUrl = req.headers["apiUrl"];
+  if (!apiUrl) {
+    console.error("Error no apiUrl found.");
+    res.statusCode = 400;
+    return;
+  }
+  let url =  apiUrl + req.url;
   let query = config.assignKey(req.query);
 
-  //Pipe is through request, this will just redirect 
-  //everything from the api to your own server at localhost. 
+  //Pipe is through request, this will just redirect
+  //everything from the api to your own server at localhost.
   //It will also pipe your queries in the url
   req.pipe(request({ qs: query , uri: url })).pipe(res);
 });
