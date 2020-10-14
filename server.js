@@ -11,12 +11,15 @@ app.use('/', function(req, res, next) {
 
   //Take the baseurl from your api and also supply whatever
   //route you use with that url
-  const apiUrl = req.headers["api-url"];
+  let apiUrl = req.headers["api-url"];
   if (!apiUrl) {
     res.statusCode = 400;
     res.send("Error no apiUrl found.");
     next();
     return;
+  }
+  if (apiUrl.slice(-1) === "/") {
+    apiUrl = apiUrl.slice(0, -1);
   }
   let url =  apiUrl + req.url;
   let query = config.assignKey(req.query);
